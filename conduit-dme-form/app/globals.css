@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tokens sourced from Figma file `Request-Flows` (shadcn/ui - CH library).
+ * TODO(figma): replace HSL values with exact tokens from `base/*` and
+ * `colors/*-dark` variable sets once node 178:1642 is selected in Figma desktop.
+ * Current values are close approximations of the purple + teal mockup palette.
+ */
+@layer base {
+  :root {
+    --background: 260 35% 20%;            /* deep purple canvas */
+    --foreground: 0 0% 100%;              /* white text on purple */
+
+    --card: 0 0% 100%;                    /* white form card */
+    --card-foreground: 240 10% 12%;       /* near-black on card */
+
+    --primary: 172 66% 50%;               /* teal/mint CTA */
+    --primary-foreground: 260 35% 15%;    /* dark text on teal */
+
+    --secondary: 260 25% 30%;             /* lighter purple for chips */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 260 15% 92%;                 /* on-card muted bg */
+    --muted-foreground: 240 5% 40%;       /* on-card muted text */
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 260 35% 15%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 8% 88%;                 /* card-internal borders */
+    --input: 240 8% 90%;
+    --ring: 172 66% 50%;
+
+    --radius: 0.75rem;
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+      "Helvetica Neue", Arial, sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    background-image:
+      radial-gradient(ellipse at top left, hsl(260 40% 28%) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom right, hsl(260 45% 18%) 0%, transparent 55%);
+    background-attachment: fixed;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .field-label {
+    @apply block text-sm font-medium text-card-foreground mb-1.5;
+  }
+  .field-hint {
+    @apply mt-1 text-xs text-muted-foreground;
+  }
+  .field-error {
+    @apply mt-1 text-xs text-destructive;
+  }
+  .input-base {
+    @apply w-full rounded-md border border-input bg-white px-3.5 py-2.5 text-sm
+           text-card-foreground placeholder:text-muted-foreground
+           focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
+           disabled:opacity-60 disabled:cursor-not-allowed transition;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           bg-primary text-primary-foreground font-semibold
+           px-6 py-3 text-sm shadow-sm
+           hover:brightness-95 active:brightness-90
+           focus-visible:ring-2 focus-visible:ring-ring
+           disabled:opacity-60 disabled:cursor-not-allowed transition;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           bg-transparent text-card-foreground font-medium
+           px-5 py-2.5 text-sm
+           hover:bg-muted transition;
+  }
+}
