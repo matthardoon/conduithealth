@@ -79,7 +79,7 @@ function Stepper({ step }: { step: Step }) {
                   ? "bg-primary text-primary-foreground"
                   : active
                   ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
-                  : "bg-white/10 text-foreground/70",
+                  : "bg-muted text-muted-foreground",
               ].join(" ")}
             >
               {done ? (
@@ -90,8 +90,8 @@ function Stepper({ step }: { step: Step }) {
                 n
               )}
             </span>
-            <span className={active ? "text-foreground" : "text-foreground/60"}>{label}</span>
-            {i < steps.length - 1 && <span aria-hidden className="mx-1 h-px w-4 bg-foreground/20" />}
+            <span className={active ? "text-foreground" : "text-muted-foreground"}>{label}</span>
+            {i < steps.length - 1 && <span aria-hidden className="mx-1 h-px w-4 bg-border" />}
           </li>
         );
       })}
@@ -207,10 +207,10 @@ export function RequestForm() {
           </svg>
         </div>
         <h1 className="text-3xl font-semibold text-foreground mb-3">You're all set.</h1>
-        <p className="text-foreground/80 mb-8">
+        <p className="text-muted-foreground mb-8">
           Thanks — we've received your request. A Conduit Health care coordinator will reach out within one business day to confirm details and insurance.
         </p>
-        <p className="text-sm text-foreground/60">
+        <p className="text-sm text-muted-foreground">
           If your need is urgent, call us directly at{" "}
           <a className="underline hover:text-foreground" href="tel:+19174232712">
             (917) 423-2712
@@ -227,7 +227,7 @@ export function RequestForm() {
         <h1 className="text-3xl sm:text-4xl font-semibold text-foreground mb-2 tracking-tight">
           Request medical supplies
         </h1>
-        <p className="text-foreground/70 max-w-xl">
+        <p className="text-muted-foreground max-w-xl">
           Tell us what you need. A care coordinator will call within one business day to confirm your request and verify insurance.
         </p>
       </div>
