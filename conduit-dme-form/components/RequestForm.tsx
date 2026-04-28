@@ -148,9 +148,10 @@ export function RequestForm() {
   };
 
   const next = () => {
-    if (validateStep(step)) setStep((s) => Math.min(4, (s + 1) as Step));
+     const next = () => {
+    if (validateStep(step)) setStep((s) => Math.min(4, s + 1) as Step);
   };
-  const back = () => setStep((s) => Math.max(1, (s - 1) as Step));
+  const back = () => setStep((s) => Math.max(1, s - 1) as Step);
 
   const submit = async () => {
     if (!state.consent) {
