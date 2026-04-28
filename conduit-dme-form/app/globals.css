@@ -3,42 +3,47 @@
 @tailwind utilities;
 
 /*
- * Tokens sourced from Figma file `Request-Flows` (shadcn/ui - CH library).
- * TODO(figma): replace HSL values with exact tokens from `base/*` and
- * `colors/*-dark` variable sets once node 178:1642 is selected in Figma desktop.
- * Current values are close approximations of the purple + teal mockup palette.
+ * Conduit Health brand tokens.
+ * Type: DM Sans (Medium / SemiBold) — matched from CH Presentation Template.
+ * Palette: warm neutrals (white, cream #E8E6DF, tan #BFBCB1, near-black #0A0A0A)
+ *          with a confident clinical green CTA (#147F4D).
  */
 @layer base {
   :root {
-    --background: 260 35% 20%;            /* deep purple canvas */
-    --foreground: 0 0% 100%;              /* white text on purple */
+    /* Surface */
+    --background: 48 27% 97%;             /* #FAFAF7 — soft cream page wash */
+    --foreground: 0 0% 4%;                /* #0A0A0A — near-black text */
 
-    --card: 0 0% 100%;                    /* white form card */
-    --card-foreground: 240 10% 12%;       /* near-black on card */
+    --card: 0 0% 100%;                    /* pure white form card */
+    --card-foreground: 0 0% 4%;
 
-    --primary: 172 66% 50%;               /* teal/mint CTA */
-    --primary-foreground: 260 35% 15%;    /* dark text on teal */
+    /* Brand */
+    --primary: 148 71% 29%;               /* #147F4D — Conduit green */
+    --primary-foreground: 0 0% 100%;      /* white text on green */
 
-    --secondary: 260 25% 30%;             /* lighter purple for chips */
-    --secondary-foreground: 0 0% 100%;
+    /* Neutrals from the deck */
+    --secondary: 42 17% 89%;              /* #E8E6DF — cream accent surface */
+    --secondary-foreground: 0 0% 4%;
 
-    --muted: 260 15% 92%;                 /* on-card muted bg */
-    --muted-foreground: 240 5% 40%;       /* on-card muted text */
+    --muted: 42 16% 94%;                  /* lighter cream — section dividers */
+    --muted-foreground: 0 0% 35%;         /* mid-grey body text */
 
-    --accent: 172 66% 50%;
-    --accent-foreground: 260 35% 15%;
+    --accent: 148 71% 29%;                /* same as primary */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 8% 88%;                 /* card-internal borders */
-    --input: 240 8% 90%;
-    --ring: 172 66% 50%;
+    /* Lines */
+    --border: 42 14% 86%;                 /* warm tan-grey */
+    --input: 42 14% 86%;
+    --ring: 148 71% 29%;
 
     --radius: 0.75rem;
 
-    --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
-      "Helvetica Neue", Arial, sans-serif;
+    /* Typography — DM Sans loaded via next/font in app/layout.tsx */
+    --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
 }
 
@@ -52,15 +57,15 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
-    background-image:
-      radial-gradient(ellipse at top left, hsl(260 40% 28%) 0%, transparent 55%),
-      radial-gradient(ellipse at bottom right, hsl(260 45% 18%) 0%, transparent 55%);
-    background-attachment: fixed;
+    font-feature-settings: "ss01", "cv11";
   }
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
     border-radius: 4px;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.01em;
   }
 }
 
@@ -84,8 +89,8 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full
            bg-primary text-primary-foreground font-semibold
            px-6 py-3 text-sm shadow-sm
-           hover:brightness-95 active:brightness-90
-           focus-visible:ring-2 focus-visible:ring-ring
+           hover:brightness-110 active:brightness-95
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
            disabled:opacity-60 disabled:cursor-not-allowed transition;
   }
   .btn-ghost {
