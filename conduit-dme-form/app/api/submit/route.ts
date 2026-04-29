@@ -19,8 +19,6 @@ function escapeHtml(s: string) {
 
 function renderEmail(data: ReturnType<typeof requestSchema.parse>) {
   const supplies = data.supplies.map(supplyLabel).map(escapeHtml).join(", ");
-  const patient = data.patient;
-  const submitter = data.submitter;
 
   const row = (label: string, value?: string) =>
     value
@@ -28,43 +26,33 @@ function renderEmail(data: ReturnType<typeof requestSchema.parse>) {
       : "";
 
   return `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f8fafc;">
-  <div style="background:white;border-radius:12px;padding:24px;border:1px solid #e2e8f0;">
-    <h2 style="margin:0 0 4px;color:#0f172a;">New DME Request</h2>
+<div style="font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#FAFAF7;">
+  <div style="background:white;border-radius:12px;padding:24px;border:1px solid #e7e5db;">
+    <h2 style="margin:0 0 4px;color:#0a0a0a;">New DME Request</h2>
     <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Submitted ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })} ET</p>
 
-    <h3 style="margin:16px 0 8px;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Supplies requested</h3>
-    <div style="padding:12px;background:#f1f5f9;border-radius:8px;color:#0f172a;">${supplies}</div>
-
-    <h3 style="margin:20px 0 8px;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Patient</h3>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      ${row("Name", `${patient.firstName} ${patient.lastName}`)}
-      ${row("DOB", patient.dob)}
-      ${row("Sex", patient.sex)}
-      ${row("ZIP", patient.zip)}
-      ${row("Medicaid ID", patient.medicaidId || undefined)}
-      ${row("Phone", patient.phone)}
-      ${row("Email", patient.email || undefined)}
-      ${row("Preferred contact", patient.preferredContact)}
-    </table>
+    <h3 style="margin:16px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Supplies requested</h3>
+    <div style="padding:12px;background:#f5f4ee;border-radius:8px;color:#0a0a0a;">${supplies}</div>
 
     ${
-      submitter
-        ? `<h3 style="margin:20px 0 8px;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Submitter</h3>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      ${row("Relationship", data.relationship)}
-      ${row("Name", `${submitter.firstName} ${submitter.lastName}`)}
-      ${row("Phone", submitter.phone)}
-      ${row("Email", submitter.email)}
-      ${row("Note", submitter.relationshipNote || undefined)}
-    </table>`
+      data.customSupplyDetails
+        ? `<h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">"Something else" details</h3>
+    <div style="padding:12px;background:#f5f4ee;border-radius:8px;color:#0a0a0a;white-space:pre-wrap;">${escapeHtml(data.customSupplyDetails)}</div>`
         : ""
     }
 
+    <h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Contact</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      ${row("Name", `${data.firstName} ${data.lastName}`)}
+      ${row("Phone", data.phone)}
+      ${row("Email", data.email || undefined)}
+      ${row("ZIP", data.zip)}
+    </table>
+
     ${
       data.notes
-        ? `<h3 style="margin:20px 0 8px;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Notes</h3>
-    <div style="padding:12px;background:#f1f5f9;border-radius:8px;color:#0f172a;white-space:pre-wrap;">${escapeHtml(data.notes)}</div>`
+        ? `<h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Notes</h3>
+    <div style="padding:12px;background:#f5f4ee;border-radius:8px;color:#0a0a0a;white-space:pre-wrap;">${escapeHtml(data.notes)}</div>`
         : ""
     }
   </div>
@@ -78,24 +66,17 @@ function renderText(data: ReturnType<typeof requestSchema.parse>) {
   lines.push("");
   lines.push("SUPPLIES:");
   lines.push(data.supplies.map(supplyLabel).join(", "));
-  lines.push("");
-  lines.push("PATIENT:");
-  lines.push(`  Name: ${data.patient.firstName} ${data.patient.lastName}`);
-  lines.push(`  DOB: ${data.patient.dob}`);
-  lines.push(`  Sex: ${data.patient.sex}`);
-  lines.push(`  ZIP: ${data.patient.zip}`);
-  if (data.patient.medicaidId) lines.push(`  Medicaid ID: ${data.patient.medicaidId}`);
-  lines.push(`  Phone: ${data.patient.phone}`);
-  if (data.patient.email) lines.push(`  Email: ${data.patient.email}`);
-  lines.push(`  Preferred contact: ${data.patient.preferredContact}`);
-  if (data.submitter) {
+  if (data.customSupplyDetails) {
     lines.push("");
-    lines.push(`SUBMITTER (${data.relationship}):`);
-    lines.push(`  Name: ${data.submitter.firstName} ${data.submitter.lastName}`);
-    lines.push(`  Phone: ${data.submitter.phone}`);
-    lines.push(`  Email: ${data.submitter.email}`);
-    if (data.submitter.relationshipNote) lines.push(`  Note: ${data.submitter.relationshipNote}`);
+    lines.push("\"Something else\" details:");
+    lines.push(data.customSupplyDetails);
   }
+  lines.push("");
+  lines.push("CONTACT:");
+  lines.push(`  Name: ${data.firstName} ${data.lastName}`);
+  lines.push(`  Phone: ${data.phone}`);
+  if (data.email) lines.push(`  Email: ${data.email}`);
+  lines.push(`  ZIP: ${data.zip}`);
   if (data.notes) {
     lines.push("");
     lines.push("NOTES:");
@@ -144,13 +125,13 @@ export async function POST(req: Request) {
     auth: { user, pass },
   });
 
-  const patientName = `${data.patient.firstName} ${data.patient.lastName}`;
+  const patientName = `${data.firstName} ${data.lastName}`;
 
   try {
     await transporter.sendMail({
       from,
       to,
-      replyTo: data.submitter?.email || data.patient.email || undefined,
+      replyTo: data.email || undefined,
       subject: `New DME request — ${patientName}`,
       text: renderText(data),
       html: renderEmail(data),

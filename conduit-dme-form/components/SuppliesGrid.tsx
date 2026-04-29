@@ -5,10 +5,13 @@ import { SUPPLIES, type SupplyId } from "@/lib/types";
 type Props = {
   value: SupplyId[];
   onChange: (next: SupplyId[]) => void;
+  customDetails: string;
+  onCustomChange: (next: string) => void;
+  customError?: string;
   error?: string;
 };
 
-const CATEGORY_ORDER = ["Incontinence", "Mobility", "Bathroom Safety"] as const;
+const CATEGORY_ORDER = ["Incontinence", "Mobility", "Bathroom Safety", "Other"] as const;
 
 function Icon({ id }: { id: SupplyId }) {
   const common = "h-6 w-6";
@@ -80,21 +83,31 @@ function Icon({ id }: { id: SupplyId }) {
           <path d="M7 9v6M17 9v6" />
         </svg>
       );
+    case "something_else":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v8M8 12h8" />
+        </svg>
+      );
     default:
       return null;
   }
 }
 
-export function SuppliesGrid({ value, onChange, error }: Props) {
+export function SuppliesGrid({ value, onChange, customDetails, onCustomChange, customError, error }: Props) {
   const toggle = (id: SupplyId) => {
     onChange(value.includes(id) ? value.filter((v) => v !== id) : [...value, id]);
   };
+
+  const showCustom = value.includes("something_else");
 
   return (
     <div>
       <div className="space-y-6">
         {CATEGORY_ORDER.map((category) => {
           const items = SUPPLIES.filter((s) => s.category === category);
+          if (items.length === 0) return null;
           return (
             <div key={category}>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
@@ -143,7 +156,24 @@ export function SuppliesGrid({ value, onChange, error }: Props) {
           );
         })}
       </div>
-      {error && <p className="field-error mt-3">{error}</p>}
+
+      {showCustom && (
+        <div className="mt-4 rounded-xl border border-border bg-secondary/40 p-4">
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Tell us what else you need
+          </label>
+          <textarea
+            className="w-full rounded-md border border-input bg-white px-3.5 py-2.5 text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition min-h-[80px]"
+            placeholder="e.g. CPAP supplies, hospital bed, oxygen concentrator"
+            value={customDetails}
+            onChange={(e) => onCustomChange(e.target.value)}
+            maxLength={500}
+          />
+          {customError && <p className="mt-1 text-xs text-destructive">{customError}</p>}
+        </div>
+      )}
+
+      {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
     </div>
   );
 }

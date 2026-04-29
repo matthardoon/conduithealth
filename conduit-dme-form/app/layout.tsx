@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Request Medical Supplies — Conduit Health",
@@ -11,12 +19,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#3A2A5E",
+  themeColor: "#FAFAF7",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={dmSans.variable}>
       <body>
         <div className="min-h-dvh flex flex-col">
           <header className="container pt-8 pb-6">
@@ -26,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </header>
           <main className="container flex-1 pb-16">{children}</main>
-          <footer className="container py-8 text-xs text-foreground/60">
+          <footer className="container py-8 text-xs text-muted-foreground">
             © {new Date().getFullYear()} Conduit Health. This form is for intake only and is not a guarantee of coverage.
           </footer>
         </div>

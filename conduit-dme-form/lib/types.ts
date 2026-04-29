@@ -11,18 +11,7 @@ export const SUPPLIES = [
   { id: "transfer_bench", label: "Transfer Bench", category: "Bathroom Safety" },
   { id: "commode", label: "Commode", category: "Bathroom Safety" },
   { id: "grab_bar", label: "Grab Bar", category: "Bathroom Safety" },
+  { id: "something_else", label: "Something Else", category: "Other" },
 ] as const;
 
 export type SupplyId = (typeof SUPPLIES)[number]["id"];
-
-export const RELATIONSHIPS = [
-  { id: "patient", label: "I'm the patient" },
-  { id: "caregiver", label: "I'm a caregiver or family member" },
-  { id: "provider", label: "I'm a healthcare provider" },
-  { id: "partner", label: "I'm a partner team member" },
-] as const;
-
-export type RelationshipId = (typeof RELATIONSHIPS)[number]["id"];
-
-export const SEX_OPTIONS = ["Female", "Male", "Prefer not to say"] as const;
-export const CONTACT_METHODS = ["Phone call", "Text message", "Either"] as const;
