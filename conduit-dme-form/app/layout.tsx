@@ -27,15 +27,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={dmSans.variable}>
       <body>
         <div className="min-h-dvh flex flex-col">
-          <header className="container pt-8 pb-6">
-            <div className="flex items-center gap-2 text-foreground">
-              <span className="inline-block h-6 w-6 rounded-full bg-primary" aria-hidden />
+          <header className="container pt-8 pb-4">
+            <a href="/" className="inline-flex items-center gap-2.5 text-foreground group">
+              <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                  <path d="M12 2v20M2 12h20" />
+                </svg>
+              </span>
               <span className="text-base font-semibold tracking-tight">Conduit Health</span>
-            </div>
+            </a>
           </header>
           <main className="container flex-1 pb-16">{children}</main>
-          <footer className="container py-8 text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Conduit Health. This form is for intake only and is not a guarantee of coverage.
+          <footer className="container py-8 text-xs text-muted-foreground border-t border-border/50 mt-8">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span>© {new Date().getFullYear()} Conduit Health</span>
+              <span>This form is for intake only and is not a guarantee of coverage.</span>
+            </div>
           </footer>
         </div>
       </body>

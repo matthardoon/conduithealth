@@ -19,7 +19,7 @@
 
     /* Brand */
     --primary: 148 71% 29%;               /* #147F4D — Conduit green */
-    --primary-foreground: 0 0% 100%;      /* white text on green */
+    --primary-foreground: 0 0% 100%;
 
     /* Neutrals from the deck */
     --secondary: 42 17% 89%;              /* #E8E6DF — cream accent surface */
@@ -28,20 +28,18 @@
     --muted: 42 16% 94%;                  /* lighter cream — section dividers */
     --muted-foreground: 0 0% 35%;         /* mid-grey body text */
 
-    --accent: 148 71% 29%;                /* same as primary */
+    --accent: 148 71% 29%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Lines */
     --border: 42 14% 86%;                 /* warm tan-grey */
     --input: 42 14% 86%;
     --ring: 148 71% 29%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    /* Typography — DM Sans loaded via next/font in app/layout.tsx */
     --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont,
       "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
@@ -58,6 +56,10 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "cv11";
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, hsl(148 30% 92%) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, hsl(42 30% 92%) 0%, transparent 50%);
+    background-attachment: fixed;
   }
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
@@ -65,31 +67,33 @@
     border-radius: 4px;
   }
   h1, h2, h3 {
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer components {
   .field-label {
-    @apply block text-sm font-medium text-card-foreground mb-1.5;
+    @apply block text-[13px] font-medium text-card-foreground mb-1.5;
   }
   .field-hint {
     @apply mt-1 text-xs text-muted-foreground;
   }
   .field-error {
-    @apply mt-1 text-xs text-destructive;
+    @apply mt-1.5 text-xs text-destructive;
   }
   .input-base {
-    @apply w-full rounded-md border border-input bg-white px-3.5 py-2.5 text-sm
-           text-card-foreground placeholder:text-muted-foreground
-           focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
+    @apply w-full rounded-lg border border-input bg-white px-4 py-3 text-[15px]
+           text-card-foreground placeholder:text-muted-foreground/70
+           focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary
            disabled:opacity-60 disabled:cursor-not-allowed transition;
   }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-full
            bg-primary text-primary-foreground font-semibold
-           px-6 py-3 text-sm shadow-sm
-           hover:brightness-110 active:brightness-95
+           px-7 py-3.5 text-[15px]
+           shadow-[0_2px_8px_-2px_rgba(20,127,77,0.4)]
+           hover:shadow-[0_4px_16px_-4px_rgba(20,127,77,0.5)]
+           hover:-translate-y-px active:translate-y-0
            focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
            disabled:opacity-60 disabled:cursor-not-allowed transition;
   }
@@ -99,4 +103,21 @@
            px-5 py-2.5 text-sm
            hover:bg-muted transition;
   }
+  .trust-pill {
+    @apply inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm
+           px-3.5 py-1.5 text-xs font-medium text-card-foreground border border-border/60;
+  }
+}
+
+.shadow-card {
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.04),
+    0 1px 3px 0 rgb(0 0 0 / 0.04),
+    0 12px 32px -12px rgb(20 30 24 / 0.12);
+}
+
+.shadow-tile {
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.04),
+    0 8px 20px -8px rgb(20 30 24 / 0.12);
 }

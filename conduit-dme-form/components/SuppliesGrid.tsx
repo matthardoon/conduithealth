@@ -11,83 +11,112 @@ type Props = {
   error?: string;
 };
 
-const CATEGORY_ORDER = ["Incontinence", "Mobility", "Bathroom Safety", "Other"] as const;
+const CATEGORY_ORDER = ["Incontinence", "Mobility", "Home Accessibility", "Other"] as const;
 
 function Icon({ id }: { id: SupplyId }) {
-  const common = "h-6 w-6";
+  const common = "h-10 w-10";
+  const stroke = { strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (id) {
-    case "disposable_underwear":
-    case "disposable_briefs":
+    case "disposable_diapers":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 6h16l-2 10a3 3 0 0 1-3 2.5H9A3 3 0 0 1 6 16L4 6Z" />
-          <path d="M8 10h8" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M8 14h32l-3 18a6 6 0 0 1-6 5H17a6 6 0 0 1-6-5L8 14Z" />
+          <path d="M14 22h20M16 28h16" />
         </svg>
       );
-    case "underpads":
-    case "incontinence_accessories":
+    case "disposable_pull_ups":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
-          <path d="M7 9h10M7 12h10M7 15h6" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M10 10h28v8a18 18 0 0 1-2 8l-3 6a3 3 0 0 1-3 2H18a3 3 0 0 1-3-2l-3-6a18 18 0 0 1-2-8v-8Z" />
+          <path d="M10 14h28" />
+        </svg>
+      );
+    case "disposable_underpads":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <rect x="6" y="10" width="36" height="28" rx="4" />
+          <path d="M12 18h24M12 24h24M12 30h16" />
+        </svg>
+      );
+    case "liner_pads":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M16 8h16l3 12-3 20H16l-3-20 3-12Z" />
+          <path d="M19 18h10M19 24h10M19 30h10" />
         </svg>
       );
     case "wheelchair":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="17" r="4" />
-          <path d="M11 5v6h6l2 4" />
-          <circle cx="14" cy="5" r="1.4" fill="currentColor" stroke="none" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <circle cx="20" cy="34" r="8" />
+          <path d="M20 8v16h12l4 8" />
+          <circle cx="28" cy="8" r="2.5" fill="currentColor" stroke="none" />
         </svg>
       );
-    case "rollator":
+    case "transport_chair":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M14 10h14v18H14z" />
+          <path d="M14 28l-2 8M28 28l2 8" />
+          <circle cx="12" cy="38" r="3" />
+          <circle cx="30" cy="38" r="3" />
+          <path d="M28 16h6" />
+        </svg>
+      );
     case "walker":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M6 4v14M18 4v14M6 10h12" />
-          <circle cx="6" cy="19.5" r="1.5" />
-          <circle cx="18" cy="19.5" r="1.5" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M14 8v32M34 8v32" />
+          <path d="M14 16h20M14 26h20" />
+          <path d="M14 8c0-1 1-2 2-2h16c1 0 2 1 2 2" />
         </svg>
       );
     case "cane":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 4a4 4 0 0 0-4 4v12" />
-        </svg>
-      );
-    case "shower_chair":
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12h14v3H5zM7 15v5M17 15v5M9 12V7a3 3 0 0 1 6 0v5" />
-        </svg>
-      );
-    case "transfer_bench":
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 13h18v2H3zM6 15v5M18 15v5M9 13V9M15 13V9" />
-        </svg>
-      );
-    case "commode":
-      return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M6 10h12v2a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4v-2Z" />
-          <path d="M8 10V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4M9 20h6" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M28 6a8 8 0 0 0-8 8v28" />
         </svg>
       );
     case "grab_bar":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 12h16" />
-          <circle cx="4" cy="12" r="1.5" />
-          <circle cx="20" cy="12" r="1.5" />
-          <path d="M7 9v6M17 9v6" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M8 24h32" />
+          <circle cx="8" cy="24" r="3" />
+          <circle cx="40" cy="24" r="3" />
+          <path d="M14 18v12M34 18v12" />
+        </svg>
+      );
+    case "shower_chair":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M10 24h28v6H10z" />
+          <path d="M14 30v10M34 30v10" />
+          <path d="M18 24V12a6 6 0 0 1 12 0v12" />
+          <path d="M14 8l2 4M30 6h4l2 4" />
+        </svg>
+      );
+    case "bedside_commode":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M12 16h24v6a8 8 0 0 1-8 8h-8a8 8 0 0 1-8-8v-6Z" />
+          <path d="M16 16V10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v6" />
+          <path d="M14 30v10M34 30v10" />
+        </svg>
+      );
+    case "hospital_bed":
+      return (
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <path d="M6 30h36v8H6z" />
+          <path d="M6 30V18a4 4 0 0 1 4-4h8v16" />
+          <path d="M30 30V14h8a4 4 0 0 1 4 4v12" />
+          <path d="M10 38v4M38 38v4" />
         </svg>
       );
     case "something_else":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 8v8M8 12h8" />
+        <svg className={common} viewBox="0 0 48 48" fill="none" stroke="currentColor" {...stroke}>
+          <circle cx="24" cy="24" r="14" />
+          <path d="M24 16v16M16 24h16" />
         </svg>
       );
     default:
@@ -104,16 +133,16 @@ export function SuppliesGrid({ value, onChange, customDetails, onCustomChange, c
 
   return (
     <div>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {CATEGORY_ORDER.map((category) => {
           const items = SUPPLIES.filter((s) => s.category === category);
           if (items.length === 0) return null;
           return (
             <div key={category}>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground mb-3">
                 {category}
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {items.map((item) => {
                   const selected = value.includes(item.id);
                   return (
@@ -123,26 +152,36 @@ export function SuppliesGrid({ value, onChange, customDetails, onCustomChange, c
                       onClick={() => toggle(item.id)}
                       aria-pressed={selected}
                       className={[
-                        "group relative flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-4 text-center transition",
-                        "hover:border-primary/60 hover:shadow-card",
+                        "group relative flex flex-col items-stretch overflow-hidden rounded-xl border bg-white text-center",
+                        "transition-all duration-200 ease-out",
+                        "hover:-translate-y-0.5 hover:shadow-tile",
                         selected
-                          ? "border-primary ring-2 ring-primary/30 bg-primary/[0.04]"
+                          ? "border-primary ring-2 ring-primary/25 shadow-tile"
                           : "border-border",
                       ].join(" ")}
                     >
-                      <span
+                      <div
                         className={[
-                          "flex h-12 w-12 items-center justify-center rounded-full transition",
-                          selected ? "bg-primary text-primary-foreground" : "bg-muted text-card-foreground",
+                          "flex items-center justify-center h-28 transition-colors",
+                          selected
+                            ? "bg-primary/[0.06] text-primary"
+                            : "bg-secondary/50 text-card-foreground/70 group-hover:bg-secondary/70 group-hover:text-card-foreground",
                         ].join(" ")}
                       >
-                        <Icon id={item.id} />
-                      </span>
-                      <span className="text-sm font-medium text-card-foreground leading-tight">
-                        {item.label}
-                      </span>
+                        {item.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={item.image} alt={item.label} className="h-full w-full object-cover" />
+                        ) : (
+                          <Icon id={item.id} />
+                        )}
+                      </div>
+                      <div className="px-3 py-3">
+                        <span className="text-[13px] sm:text-sm font-medium text-card-foreground leading-tight">
+                          {item.label}
+                        </span>
+                      </div>
                       {selected && (
-                        <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <span className="absolute top-2.5 right-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm ring-2 ring-white">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
@@ -158,18 +197,18 @@ export function SuppliesGrid({ value, onChange, customDetails, onCustomChange, c
       </div>
 
       {showCustom && (
-        <div className="mt-4 rounded-xl border border-border bg-secondary/40 p-4">
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+        <div className="mt-5 rounded-xl border border-primary/30 bg-primary/[0.03] p-5">
+          <label className="block text-sm font-semibold text-card-foreground mb-2">
             Tell us what else you need
           </label>
           <textarea
-            className="w-full rounded-md border border-input bg-white px-3.5 py-2.5 text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition min-h-[80px]"
-            placeholder="e.g. CPAP supplies, hospital bed, oxygen concentrator"
+            className="input-base min-h-[88px] resize-y"
+            placeholder="e.g. CPAP supplies, oxygen concentrator, hospital-grade humidifier"
             value={customDetails}
             onChange={(e) => onCustomChange(e.target.value)}
             maxLength={500}
           />
-          {customError && <p className="mt-1 text-xs text-destructive">{customError}</p>}
+          {customError && <p className="mt-2 text-xs text-destructive">{customError}</p>}
         </div>
       )}
 
