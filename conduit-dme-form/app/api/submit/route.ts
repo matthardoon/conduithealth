@@ -22,7 +22,7 @@ function renderEmail(data: ReturnType<typeof requestSchema.parse>) {
 
   const row = (label: string, value?: string) =>
     value
-      ? `<tr><td style="padding:6px 12px;color:#64748b;white-space:nowrap;">${label}</td><td style="padding:6px 12px;color:#0f172a;">${escapeHtml(value)}</td></tr>`
+      ? `<tr><td style="padding:6px 12px;color:#64748b;white-space:nowrap;">${label}</td><td style="padding:6px 12px;color:#0a0a0a;">${escapeHtml(value)}</td></tr>`
       : "";
 
   return `
@@ -41,12 +41,25 @@ function renderEmail(data: ReturnType<typeof requestSchema.parse>) {
         : ""
     }
 
-    <h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Contact</h3>
+    <h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Patient</h3>
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
       ${row("Name", `${data.firstName} ${data.lastName}`)}
+      ${row("DOB", data.dob)}
+      ${row("Sex", data.sex)}
+      ${row("ZIP", data.zip)}
+    </table>
+
+    <h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Contact</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
       ${row("Phone", data.phone)}
       ${row("Email", data.email || undefined)}
-      ${row("ZIP", data.zip)}
+      ${row("Preferred", data.preferredContact)}
+    </table>
+
+    <h3 style="margin:20px 0 8px;color:#0a0a0a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Insurance</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      ${row("Type", data.insuranceType)}
+      ${row("Member ID", data.insuranceMemberId || undefined)}
     </table>
 
     ${
@@ -68,15 +81,24 @@ function renderText(data: ReturnType<typeof requestSchema.parse>) {
   lines.push(data.supplies.map(supplyLabel).join(", "));
   if (data.customSupplyDetails) {
     lines.push("");
-    lines.push("\"Something else\" details:");
+    lines.push('"Something else" details:');
     lines.push(data.customSupplyDetails);
   }
   lines.push("");
-  lines.push("CONTACT:");
+  lines.push("PATIENT:");
   lines.push(`  Name: ${data.firstName} ${data.lastName}`);
+  lines.push(`  DOB: ${data.dob}`);
+  lines.push(`  Sex: ${data.sex}`);
+  lines.push(`  ZIP: ${data.zip}`);
+  lines.push("");
+  lines.push("CONTACT:");
   lines.push(`  Phone: ${data.phone}`);
   if (data.email) lines.push(`  Email: ${data.email}`);
-  lines.push(`  ZIP: ${data.zip}`);
+  lines.push(`  Preferred: ${data.preferredContact}`);
+  lines.push("");
+  lines.push("INSURANCE:");
+  lines.push(`  Type: ${data.insuranceType}`);
+  if (data.insuranceMemberId) lines.push(`  Member ID: ${data.insuranceMemberId}`);
   if (data.notes) {
     lines.push("");
     lines.push("NOTES:");

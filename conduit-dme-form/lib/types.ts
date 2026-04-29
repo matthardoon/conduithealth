@@ -31,3 +31,19 @@ export const SUPPLIES = [
 ] as const satisfies readonly Supply[];
 
 export type SupplyId = (typeof SUPPLIES)[number]["id"];
+
+export const SEX_OPTIONS = ["Female", "Male", "Prefer not to say"] as const;
+export type Sex = (typeof SEX_OPTIONS)[number];
+
+export const INSURANCE_TYPES = [
+  "Medicare",
+  "Medicaid",
+  "Commercial / Private",
+  "Medicare Advantage",
+  "Other",
+  "Not sure",
+] as const;
+export type InsuranceType = (typeof INSURANCE_TYPES)[number];
+
+export const CONTACT_METHODS = ["Phone call", "Text message", "Either"] as const;
+export type ContactMethod = (typeof CONTACT_METHODS)[number];

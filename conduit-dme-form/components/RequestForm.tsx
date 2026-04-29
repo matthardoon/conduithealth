@@ -2,16 +2,29 @@
 
 import { useState } from "react";
 import { SuppliesGrid } from "./SuppliesGrid";
-import { type SupplyId } from "@/lib/types";
+import {
+  type SupplyId,
+  SEX_OPTIONS,
+  INSURANCE_TYPES,
+  CONTACT_METHODS,
+  type Sex,
+  type InsuranceType,
+  type ContactMethod,
+} from "@/lib/types";
 
 type FormState = {
   supplies: SupplyId[];
   customSupplyDetails: string;
   firstName: string;
   lastName: string;
+  dob: string;
+  sex: Sex | "";
+  zip: string;
   phone: string;
   email: string;
-  zip: string;
+  preferredContact: ContactMethod;
+  insuranceType: InsuranceType | "";
+  insuranceMemberId: string;
   notes: string;
   consent: boolean;
 };
@@ -21,9 +34,14 @@ const emptyState: FormState = {
   customSupplyDetails: "",
   firstName: "",
   lastName: "",
+  dob: "",
+  sex: "",
+  zip: "",
   phone: "",
   email: "",
-  zip: "",
+  preferredContact: "Phone call",
+  insuranceType: "",
+  insuranceMemberId: "",
   notes: "",
   consent: false,
 };
@@ -79,12 +97,21 @@ export function RequestForm() {
     }
     if (!state.firstName.trim()) e.firstName = "Required";
     if (!state.lastName.trim()) e.lastName = "Required";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(state.dob)) e.dob = "Enter a valid date";
+    if (!state.sex) e.sex = "Please select an option";
+    if (!/^\d{5}$/.test(state.zip)) e.zip = "Enter your 5-digit ZIP";
     if (!/^[+]?[0-9().\-\s]{10,20}$/.test(state.phone)) e.phone = "Enter a valid phone number";
     if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) e.email = "Enter a valid email";
-    if (!/^\d{5}$/.test(state.zip)) e.zip = "Enter your 5-digit ZIP";
+    if (!state.insuranceType) e.insuranceType = "Please choose your insurance type";
     if (!state.consent) e.consent = "Please agree to be contacted before submitting.";
     setErrors(e);
-    const order = ["supplies", "customSupplyDetails", "firstName", "lastName", "phone", "zip", "email", "consent"];
+    const order = [
+      "supplies", "customSupplyDetails",
+      "firstName", "lastName", "dob", "sex", "zip",
+      "phone", "email",
+      "insuranceType", "insuranceMemberId",
+      "consent",
+    ];
     const firstErrorKey = order.find((k) => k in e);
     return { ok: Object.keys(e).length === 0, firstErrorId: firstErrorKey };
   };
@@ -106,9 +133,14 @@ export function RequestForm() {
         customSupplyDetails: state.customSupplyDetails || undefined,
         firstName: state.firstName,
         lastName: state.lastName,
+        dob: state.dob,
+        sex: state.sex,
+        zip: state.zip,
         phone: state.phone,
         email: state.email || undefined,
-        zip: state.zip,
+        preferredContact: state.preferredContact,
+        insuranceType: state.insuranceType,
+        insuranceMemberId: state.insuranceMemberId || undefined,
         notes: state.notes || undefined,
         consent: true,
       };
@@ -174,7 +206,6 @@ export function RequestForm() {
         </div>
       </div>
 
-      {/* Form card */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -182,13 +213,17 @@ export function RequestForm() {
         }}
         className="bg-card text-card-foreground rounded-2xl shadow-card p-6 sm:p-10 space-y-10"
       >
+        {/* SUPPLIES */}
         <section id="field-supplies">
-          <header className="mb-6">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2">What do you need?</h2>
-            <p className="text-sm text-muted-foreground">
-              Select everything that applies. Not on the list? Choose <span className="font-medium text-foreground">Something Else</span> and tell us in your own words.
-            </p>
-          </header>
+          <SectionHeader
+            number={1}
+            title="What do you need?"
+            description={
+              <>
+                Select everything that applies. Not on the list? Choose <span className="font-medium text-foreground">Something Else</span> and tell us in your own words.
+              </>
+            }
+          />
           <div id="field-customSupplyDetails">
             <SuppliesGrid
               value={state.supplies}
@@ -203,14 +238,13 @@ export function RequestForm() {
 
         <hr className="border-border/70" />
 
+        {/* PATIENT */}
         <section>
-          <header className="mb-6">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2">How can we reach you?</h2>
-            <p className="text-sm text-muted-foreground">
-              We'll call within one business day to confirm details and verify your insurance.
-            </p>
-          </header>
-
+          <SectionHeader
+            number={2}
+            title="About the patient"
+            description="We'll use this to verify your insurance eligibility."
+          />
           <div className="grid sm:grid-cols-2 gap-x-5 gap-y-4">
             <Field id="field-firstName" label="First name" error={errors.firstName}>
               <input
@@ -230,15 +264,28 @@ export function RequestForm() {
                 placeholder="Smith"
               />
             </Field>
-            <Field id="field-phone" label="Phone number" error={errors.phone}>
+            <Field id="field-dob" label="Date of birth" error={errors.dob}>
               <input
-                type="tel"
+                type="date"
                 className="input-base"
-                value={state.phone}
-                onChange={(e) => update("phone", e.target.value)}
-                autoComplete="tel"
-                placeholder="(555) 123-4567"
+                value={state.dob}
+                onChange={(e) => update("dob", e.target.value)}
+                autoComplete="bday"
               />
+            </Field>
+            <Field id="field-sex" label="Sex assigned at birth" error={errors.sex}>
+              <select
+                className="input-base"
+                value={state.sex}
+                onChange={(e) => update("sex", e.target.value as Sex)}
+              >
+                <option value="">Select…</option>
+                {SEX_OPTIONS.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
             </Field>
             <Field id="field-zip" label="ZIP code" error={errors.zip}>
               <input
@@ -251,32 +298,117 @@ export function RequestForm() {
                 placeholder="10001"
               />
             </Field>
+          </div>
+        </section>
+
+        <hr className="border-border/70" />
+
+        {/* CONTACT */}
+        <section>
+          <SectionHeader
+            number={3}
+            title="How can we reach you?"
+            description="We'll call within one business day to confirm your request."
+          />
+          <div className="grid sm:grid-cols-2 gap-x-5 gap-y-4">
+            <Field id="field-phone" label="Phone number" error={errors.phone}>
+              <input
+                type="tel"
+                className="input-base"
+                value={state.phone}
+                onChange={(e) => update("phone", e.target.value)}
+                autoComplete="tel"
+                placeholder="(555) 123-4567"
+              />
+            </Field>
+            <Field id="field-email" label="Email (optional)" error={errors.email}>
+              <input
+                type="email"
+                className="input-base"
+                value={state.email}
+                onChange={(e) => update("email", e.target.value)}
+                autoComplete="email"
+                placeholder="jane@example.com"
+              />
+            </Field>
             <div className="sm:col-span-2">
-              <Field id="field-email" label="Email (optional)" error={errors.email}>
-                <input
-                  type="email"
-                  className="input-base"
-                  value={state.email}
-                  onChange={(e) => update("email", e.target.value)}
-                  autoComplete="email"
-                  placeholder="jane@example.com"
-                />
-              </Field>
-            </div>
-            <div className="sm:col-span-2">
-              <Field label="Anything else we should know? (optional)">
-                <textarea
-                  className="input-base min-h-[88px] resize-y"
-                  maxLength={2000}
-                  placeholder="Insurance carrier, doctor's name, best time to call, etc."
-                  value={state.notes}
-                  onChange={(e) => update("notes", e.target.value)}
-                />
+              <Field label="Preferred contact method">
+                <div className="flex flex-wrap gap-2">
+                  {CONTACT_METHODS.map((m) => {
+                    const active = state.preferredContact === m;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => update("preferredContact", m)}
+                        className={[
+                          "rounded-full border px-4 py-2 text-sm transition",
+                          active
+                            ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                            : "border-border hover:border-primary/60 bg-white",
+                        ].join(" ")}
+                      >
+                        {m}
+                      </button>
+                    );
+                  })}
+                </div>
               </Field>
             </div>
           </div>
         </section>
 
+        <hr className="border-border/70" />
+
+        {/* INSURANCE */}
+        <section>
+          <SectionHeader
+            number={4}
+            title="Insurance"
+            description="Don't worry if you don't know everything — we'll help you figure it out on the call."
+          />
+          <div className="grid sm:grid-cols-2 gap-x-5 gap-y-4">
+            <Field id="field-insuranceType" label="Insurance type" error={errors.insuranceType}>
+              <select
+                className="input-base"
+                value={state.insuranceType}
+                onChange={(e) => update("insuranceType", e.target.value as InsuranceType)}
+              >
+                <option value="">Select…</option>
+                {INSURANCE_TYPES.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              id="field-insuranceMemberId"
+              label="Member ID (optional)"
+              error={errors.insuranceMemberId}
+            >
+              <input
+                className="input-base"
+                value={state.insuranceMemberId}
+                onChange={(e) => update("insuranceMemberId", e.target.value)}
+                placeholder="From your insurance card"
+              />
+            </Field>
+          </div>
+        </section>
+
+        {/* NOTES */}
+        <Field label="Anything else we should know? (optional)">
+          <textarea
+            className="input-base min-h-[88px] resize-y"
+            maxLength={2000}
+            placeholder="Doctor's name, best time to call, urgency, etc."
+            value={state.notes}
+            onChange={(e) => update("notes", e.target.value)}
+          />
+        </Field>
+
+        {/* CONSENT */}
         <div id="field-consent">
           <label className="flex gap-3 items-start p-4 rounded-xl bg-secondary/40 border border-border/60 cursor-pointer hover:bg-secondary/60 transition">
             <input
@@ -317,6 +449,30 @@ export function RequestForm() {
         </div>
       </form>
     </section>
+  );
+}
+
+function SectionHeader({
+  number,
+  title,
+  description,
+}: {
+  number: number;
+  title: string;
+  description?: React.ReactNode;
+}) {
+  return (
+    <header className="mb-6">
+      <div className="flex items-center gap-3 mb-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-semibold">
+          {number}
+        </span>
+        <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
+      </div>
+      {description && (
+        <p className="text-sm text-muted-foreground ml-10">{description}</p>
+      )}
+    </header>
   );
 }
 
